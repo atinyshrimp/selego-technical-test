@@ -11,7 +11,7 @@ import SelectMonth from "./../../components/selectMonth";
 import { getDaysInMonth } from "./utils";
 
 const Activity = () => {
-  const [date, setDate] = useState(new Date()); // Set default date to current date
+  const [date, setDate] = useState(new Date(0)); // Set default date to January 1st, 1970
   const [user, setUser] = useState(null);
   const [project, setProject] = useState("");
 
@@ -36,7 +36,7 @@ const Activity = () => {
       <div className="flex flex-wrap gap-5 p-2 md:!px-8">
         <SelectProject
           value={project}
-          onChange={(e) => setProject(e.name)}
+          onChange={(e) => setProject(e._id)}
           className="w-[180px] bg-[#FFFFFF] text-[#212325] py-[10px] px-[14px] rounded-[10px] border-r-[16px] border-[transparent] cursor-pointer shadow-sm font-normal text-[14px]"
         />
         <SelectMonth start={-3} indexDefaultValue={3} value={date} onChange={(e) => setDate(e.target.value)} showArrows />
@@ -49,10 +49,11 @@ const Activity = () => {
 const Activities = ({ date, user, project }) => {
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(null);
+  const dateTo = date.getTime() !== new Date(0).getTime() ? new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime() : null;
 
   useEffect(() => {
     (async () => {
-      const { data } = await api.get(`/activity?date=${date.getTime()}&user=${user.name}&project=${project}`);
+      const { data } = await api.get(`/activity?dateFrom=${date.getTime()}${dateTo ? `&dateTo=${dateTo}` : ""}&userId=${user._id}${project ? `&projectId=${project}` : ""}`);
       const projects = await api.get(`/project/list`);
       setActivities(
         data.map((activity) => {

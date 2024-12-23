@@ -23,7 +23,7 @@ export default ({ value, active = true, onChange }) => {
         value={value || ""}
         onChange={(e) => {
           e.preventDefault();
-          const f = projects.find((f) => e.target.value === f.name);
+          const f = projects.find((f) => e.target.value === f._id);
           if (f) {
             onChange(f);
           } else {
@@ -40,7 +40,7 @@ export default ({ value, active = true, onChange }) => {
           })
           .map((e) => {
             return (
-              <option key={e.name} value={e.name}>
+              <option key={e._id} value={e._id}>
                 {e.name}
               </option>
             );

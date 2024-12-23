@@ -108,4 +108,50 @@ onChange={(e) => {
 }}
 ```
 
+#### 4. Show only Current User's Activities
+
+When a project has activities logged by different users, all activities could be edited by a user, which is not optimal security-wise.
+![](screenshots/activities_with_all_users.png)
+
+So I found it quite important to solve this issue. The problem was with the parameters given to the API URL, the expected parameter was `userId` but `user` was used, and same for the filtering option for the MongoDB collection. These mishaps caused the returned data to not be filtered by the current user at all, so all the activites were returned instead of only the ones related to the user.
+
+_change in `api\src\controllers\activity.js`_
+
+```javascript
+// if (req.query.userId) query.user = req.query.userId;
+if (req.query.userId) query.userId = req.query.userId;
+```
+
+\
+_change in `app\src\components\selectProject.js`_\
+To use the project's ID instead of its name in the API URL
+
+```js
+// const f = projects.find((f) => e.target.value === f.name);
+const f = projects.find((f) => e.target.value === f._id);
+
+.map((e) => { // From line 41
+	return (
+		<option key={e._id} value={e._id}>
+		{e.name}
+		</option>
+	);
+})
+```
+
+_changes in `app\src\scenes\activity\index.js`_\
+Other changes were made in this file to deal with the selection of the date range.
+
+```js
+// const { data } = await api.get(`/activity?date=${date.getTime()}&user=${user.name}&project=${project}`);
+const { data } = await api.get(
+	`/activity?dateFrom=${date.getTime()}${
+		dateTo ? `&dateTo=${dateTo}` : ""
+	}&userId=${user._id}${project ? `&projectId=${project}` : ""}`
+);
+```
+
+Now, only the current user's activities are editable. To see the overall progress of a project, it is still possible in the "Projects" tab.
+![](screenshots/user_activities.png)
+
 ### Added Functionality
