@@ -11,7 +11,7 @@ import SelectMonth from "./../../components/selectMonth";
 import { getDaysInMonth } from "./utils";
 
 const Activity = () => {
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState(new Date()); // Set default date to current date
   const [user, setUser] = useState(null);
   const [project, setProject] = useState("");
 
@@ -26,7 +26,7 @@ const Activity = () => {
 
     if (user) return setUser({ name: user });
     return setUser(u);
-  }, []);
+  }, [u]); // Added `u` to the dependency array
 
   if (user === null) return <Loader />;
 
