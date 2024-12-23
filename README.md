@@ -7,17 +7,19 @@ Fabien just came back from a meeting with an incubator and told them we have a p
 All others developers are busy and we need you to deliver the app for tomorrow.
 Some bugs are left and we need you to fix those. Don't spend to much time on it.
 
-We need you to follow these steps to understand the app and to fix the bug : 
- - Sign up to the app
- - Create at least 2 others users on people page ( not with signup ) 
- - Edit these profiles and add aditional information 
- - Create a project
- - Input some information about the project
- - Input some activities to track your work in the good project
-  
+We need you to follow these steps to understand the app and to fix the bug :
+
+- Sign up to the app
+- Create at least 2 others users on people page ( not with signup )
+- Edit these profiles and add aditional information
+- Create a project
+- Input some information about the project
+- Input some activities to track your work in the good project
+
 Then, see what happens in the app and fix the bug you found doing that.
 
 ## Then
+
 Time to be creative, and efficient. Do what you think would be the best for your product under a short period.
 
 ### The goal is to fix at least 3 bugs and implement 1 quick win feature than could help us sell the platform
@@ -36,8 +38,74 @@ Time to be creative, and efficient. Do what you think would be the best for your
 
 ## Finally
 
-Send us the project and answer to those simple questions : 
-- What bugs did you find ? How did you solve these and why ? 
-- Which feature did you develop and why ? 
-- Do you have any feedback about the code / architecture of the project and what was the difficulty you encountered while doing it ? 
+Send us the project and answer to those simple questions :
 
+- What bugs did you find ? How did you solve these and why ?
+- Which feature did you develop and why ?
+- Do you have any feedback about the code / architecture of the project and what was the difficulty you encountered while doing it ?
+
+## Submission
+
+### Fixed Bugs
+
+#### 1. Display the Project's Name & Edit Project
+
+When clicking on the project this screen got displayed suddenly:
+![Bug Screen](screenshots/project_name_bug.png)
+Also when clicking on the "Edit" button, the page kept loading indefinitely as no project ID was passed to the URL, as seen in the picture below:
+![Project's Edit Page Loading](screenshots/project_edit_loading.png)
+In `app\src\scenes\project\view.js`, `console.log(project)` shows that the returned `project` is an array such as the following:
+![console showing project](screenshots/project_in_console.png)
+So, the `project` which name we want to display is the first element of said array but, as an ID is unique, it is more relevant to return **a single object** instead of a whole array.\
+So in `api\src\controllers\project.js`, the call to the MongoDB database to fetch a `Project` with its `id` should be done this way:
+
+```javascript
+// const data = await ProjectObject.find({ _id: req.params.id });
+const data = await ProjectObject.findOne({ _id: req.params.id });
+```
+
+#### 2. Display Name for Newly Created Users
+
+It is actually the first bug that occured to me when I was asked to create two users from the "People" tab, it frustated me that the name did not come through.
+![User creation form](screenshots/creating_user.png)
+![User name not showing up](screenshots/user_name_not_showing.png)
+
+After browsing through the [Formik's documentation](https://formik.org/docs/api/formik#onsubmit-values-values-formikbag-formikbag--void--promiseany), it turns out that the `name` attribute of the `input` tags are used as keys in the returned `values`. So, for the chosen user's name to come through, the `name` attribute should be `name` and not `username`, to fit the `name` attribute in a `User` object:
+
+```javascript
+{
+	/* <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="username" value={values.username} onChange={handleChange} /> */
+}
+<input
+	className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+	name="name"
+	value={values.name}
+	onChange={handleChange}
+/>;
+```
+
+_(changes in `app\src\scenes\user\list.js`)_
+
+![Name showing after user creation](screenshots/successful_user_name_transfer.png)
+
+#### 3. Handle Undefined Project in `SelectProject` Component
+
+When interacting with the `SelectProject` component, a `TypeError` occurred if the selected project was not found in the list of projects.
+
+![Type Error when selecting "All Project"](screenshots/activities_type_error.png)
+
+To solve this issue, I updated the `onChange` function in `app\src\components\selectProject.js` to ensure that the project is found before trying to access its properties:
+
+```javascript
+onChange={(e) => {
+	e.preventDefault();
+	const f = projects.find((f) => e.target.value === f.name);
+	if (f) {
+	onChange(f);
+	} else {
+	onChange({ name: "" }); // Handle case where project is not found
+	}
+}}
+```
+
+### Added Functionality
