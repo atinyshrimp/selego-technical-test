@@ -173,7 +173,8 @@ The reasons why I chose this feature are the following:
 
 3. **Middleware**: A middleware (`roleMiddleware.js`) has been created to check user roles and permissions. This middleware is applied to routes that require specific permissions.
 
-4. **Protected Routes**: Routes that require specific permissions are protected using the middleware. For example, only users with the `create_project` permission can access the route to create a new project.
+4. **Protected Routes**: Routes that require specific permissions are protected using the middleware. For example, only users with the `create_project` permission can access the route to create a new project.\
+   _permissions applied only to projects_
 
 5. **User Interface**: I've added an input field in the signup form to allow users to choose their role. In a real scope, applicants to another role than `user` would need to be approved by another user of the same type, per example. A `div` has been added to the menu to show which user is currenty logged in and their role, which is shown with a new component `RoleBadge`.
    ![User panel with roles](screenshots/newly_created_roles.png)
