@@ -152,6 +152,40 @@ const { data } = await api.get(
 ```
 
 Now, only the current user's activities are editable. To see the overall progress of a project, it is still possible in the "Projects" tab.
-![](screenshots/user_activities.png)
+![Only current user's activities](screenshots/user_activities.png)
 
-### Added Functionality
+### Added Functionality: User Roles and Permissions
+
+#### Feature Description
+
+We have implemented a user roles and permissions feature to enhance the security and functionality of our platform. This feature allows us to assign different roles to users, each with specific permissions that control what actions they can perform within the application.\
+The reasons why I chose this feature are the following:
+
+1. **Security**: By restricting access to certain actions based on user roles, unauthorized users can be prevented from performing sensitive operations.
+2. **Scalability**: Having a robust roles and permissions system allows to manage user access more efficiently.
+3. **Customization**: Different organizations may have different needs. This feature allows tailoring of the user experience based on their role within the organization.
+
+#### How It Works
+
+1. **Roles Definition**: Three roles have been defined: `admin`, `manager`, and `user`. Each role has specific permissions associated with it, defined in a configuration file (`roles.json`).
+
+2. **User Model**: The user model has been updated to include a `role` attribute, which can be one of the predefined roles.
+
+3. **Middleware**: A middleware (`roleMiddleware.js`) has been created to check user roles and permissions. This middleware is applied to routes that require specific permissions.
+
+4. **Protected Routes**: Routes that require specific permissions are protected using the middleware. For example, only users with the `create_project` permission can access the route to create a new project.
+
+5. **User Interface**: I've added an input field in the signup form to allow users to choose their role. In a real scope, applicants to another role than `user` would need to be approved by another user of the same type, per example. A `div` has been added to the menu to show which user is currenty logged in and their role, which is shown with a new component `RoleBadge`.
+   ![User panel with roles](screenshots/newly_created_roles.png)
+
+#### Example Usage
+
+- **Signup Form**: Users can select their role during signup and when creating a new one from the "People" page.
+  ![New user form with role selection](screenshots/new_user_form.png)
+
+- **Protected Routes**: Only users with the appropriate permissions can access certain routes.
+  - anasui (`user`)
+    ![User can't create a project](screenshots/project_creation_denied_user.png)
+  - speedwagon (`admin`)
+    ![Admin creating a project](screenshots/admin_creating_project.png)
+    ![Project Creation successful](screenshots/admin_project_created.png)
