@@ -65,6 +65,14 @@ const Detail = ({ user }) => {
                   onChange={handleChange}
                 />
               </div>
+              <div className="w-full md:w-[260px] mt-[10px] md:mt-0 ">
+                <div className="text-[14px] text-[#212325] font-medium	">Role</div>
+                <select className="projectsInput text-[14px] font-normal text-[#212325] bg-[#F9FBFD] rounded-[10px]" name="role" value={values.role} onChange={handleChange}>
+                  <option value="user">User</option>
+                  <option value="manager">Manager</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
               <div className="w-full md:w-[260px] mt-[10px] md:mt-0">
                 <div className="text-[14px] text-[#212325] font-medium	">Email</div>
                 <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="email" value={values.email} onChange={handleChange} />

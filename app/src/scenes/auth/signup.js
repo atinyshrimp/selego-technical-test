@@ -74,6 +74,20 @@ export default () => {
               </div>
               <div className="mb-[25px]">
                 <div className="flex flex-col-reverse">
+                  <Field as="select" className="peer signInInputs" name="role" id="role" value={values.role} onChange={handleChange}>
+                    <option value="user">User</option>
+                    <option value="manager">Manager</option>
+                    <option value="admin">Admin</option>
+                  </Field>
+                  <label className="peer-focus:text-[#116eee]" htmlFor="role">
+                    Role
+                  </label>
+                </div>
+                {/* Error */}
+                <p className="text-[12px] text-[#FD3131]">{errors.role}</p>
+              </div>
+              <div className="mb-[25px]">
+                <div className="flex flex-col-reverse">
                   <Field
                     className="peer signInInputs"
                     validate={(v) => validator.isEmpty(v) && "This field is Required"}

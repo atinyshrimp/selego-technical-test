@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/logo_full_blue.png";
 import { setUser } from "../../redux/auth/actions";
 import api from "../../services/api";
+import RoleBadge from "../RoleBadge";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -56,6 +57,10 @@ const Header = () => {
           open={open}>
           <div className="text-3xl mt-3 cursor-pointer	text-[#666] block w-[45px] py-0	px-3.5	ml-auto	md:hidden " onClick={() => setOpen(false)}>
             &times;
+          </div>
+          <div className="p-4 border-b border-gray-200">
+            <p className="text-sm font-medium text-gray-900">{user.name}</p>
+            <RoleBadge role={user.role} />
           </div>
           <div className="text-[15px] font-[Arial] text-left text-[#888888] cursor-pointer border-l-4 border-[#ffffff] hover:border-[#4d90fb] hover:bg-[#d3bfc731] hover:text-[#333]">
             <Link className="text-inherit p-[10px] hover:text-[#333] hover:no-underline block" to="/account">

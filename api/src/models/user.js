@@ -30,6 +30,7 @@ const Schema = new mongoose.Schema({
   status: { type: String, default: "active" },
   availability: { type: String, default: "available" },
   address: { type: String },
+  role: { type: String, enum: ["admin", "manager", "user"], default: "user" }, // Added role attribute
 });
 
 Schema.pre("save", function (next) {

@@ -59,11 +59,11 @@ class Auth {
 
   async signup(req, res) {
     try {
-      const { password, username, organisation } = req.body;
+      const { password, username, organisation, role } = req.body;
 
       if (password && !validatePassword(password)) return res.status(200).send({ ok: false, user: null, code: PASSWORD_NOT_VALIDATED });
 
-      const user = await this.model.create({ name: username, organisation, password });
+      const user = await this.model.create({ name: username, organisation, password, role });
       const token = jwt.sign({ _id: user._id }, config.secret, { expiresIn: JWT_MAX_AGE });
       const opts = { maxAge: COOKIE_MAX_AGE, secure: config.ENVIRONMENT === "development" ? false : true, httpOnly: false };
       res.cookie("jwt", token, opts);

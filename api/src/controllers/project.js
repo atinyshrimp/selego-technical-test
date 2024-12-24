@@ -3,6 +3,7 @@ const passport = require("passport");
 const router = express.Router();
 
 const ProjectObject = require("../models/project");
+const checkRole = require("../middleware/roleMiddleware");
 
 const SERVER_ERROR = "SERVER_ERROR";
 const PROJECT_ALREADY_EXISTS = "PROJECT_ALREADY_EXISTS";
@@ -27,7 +28,7 @@ router.get("/:id", passport.authenticate("user", { session: false }), async (req
   }
 });
 
-router.post("/", passport.authenticate("user", { session: false }), async (req, res) => {
+router.post("/", passport.authenticate("user", { session: false }), checkRole("create_project"), async (req, res) => {
   try {
     const data = await ProjectObject.create({ ...req.body, organisation: req.user.organisation });
     return res.status(200).send({ data, ok: true });
@@ -48,7 +49,7 @@ router.get("/", passport.authenticate("user", { session: false }), async (req, r
   }
 });
 
-router.put("/:id", passport.authenticate("user", { session: false }), async (req, res) => {
+router.put("/:id", passport.authenticate("user", { session: false }), checkRole("edit_project"), async (req, res) => {
   try {
     const obj = req.body;
 
@@ -61,7 +62,7 @@ router.put("/:id", passport.authenticate("user", { session: false }), async (req
   }
 });
 
-router.delete("/:id", passport.authenticate("user", { session: false }), async (req, res) => {
+router.delete("/:id", passport.authenticate("user", { session: false }), checkRole("delete_project"), async (req, res) => {
   try {
     await ProjectObject.findOneAndRemove({ _id: req.params.id });
     res.status(200).send({ ok: true });

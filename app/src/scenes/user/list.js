@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import Loader from "../../components/loader";
 import LoadingButton from "../../components/loadingButton";
 import api from "../../services/api";
+import RoleBadge from "../../components/RoleBadge";
 
 const NewList = () => {
   const [users, setUsers] = useState(null);
@@ -110,7 +111,7 @@ const Create = () => {
                 try {
                   values.status = "active";
                   values.availability = "not available";
-                  values.role = "ADMIN";
+                  // values.role = "user";
                   const res = await api.post("/user", values);
                   if (!res.ok) throw res;
                   toast.success("Created!");
@@ -141,6 +142,15 @@ const Create = () => {
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Password</div>
                         <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="password" value={values.password} onChange={handleChange} />
+                      </div>
+                      {/* Role */}
+                      <div className="w-full md:w-[48%] mt-2">
+                        <div className="text-[14px] text-[#212325] font-medium">Role</div>
+                        <select className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="role" value={values.role} onChange={handleChange}>
+                          <option value="user">User</option>
+                          <option value="manager">Manager</option>
+                          <option value="admin">Admin</option>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -249,6 +259,7 @@ const UserCard = ({ hit, projects }) => {
       <div className="flex flex-col flex-1 justify-between">
         <div className="flex flex-col items-center text-center my-4 space-y-1">
           <p className="font-semibold text-lg">{hit.name}</p>
+          <RoleBadge role={hit.role} />
         </div>
       </div>
     </div>
