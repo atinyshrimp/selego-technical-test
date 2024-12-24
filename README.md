@@ -151,17 +151,17 @@ const { data } = await api.get(
 );
 ```
 
-Now, only the current user's activities are editable. To see the overall progress of a project, it is still possible in the "Projects" tab.
+Now, only the current user's activities are editable. To see the overall progress of a project, it is still possible in the "Projects" page.
 ![Only current user's activities](screenshots/user_activities.png)
 
 ### Added Functionality: User Roles and Permissions
 
 #### Feature Description
 
-We have implemented a user roles and permissions feature to enhance the security and functionality of our platform. This feature allows us to assign different roles to users, each with specific permissions that control what actions they can perform within the application.\
+I chose to implement a user roles and permissions feature to enhance the security and functionality of our platform. This feature allows the assignment of different roles to users, each with specific permissions that control what actions they can perform within the application.\
 The reasons why I chose this feature are the following:
 
-1. **Security**: By restricting access to certain actions based on user roles, unauthorized users can be prevented from performing sensitive operations.
+1. **Security**: By restricting access to certain actions based on user roles, unauthorized users can be prevented from performing sensitive operations, such as deleting important projects.
 2. **Scalability**: Having a robust roles and permissions system allows to manage user access more efficiently.
 3. **Customization**: Different organizations may have different needs. This feature allows tailoring of the user experience based on their role within the organization.
 
@@ -169,7 +169,7 @@ The reasons why I chose this feature are the following:
 
 1. **Roles Definition**: Three roles have been defined: `admin`, `manager`, and `user`. Each role has specific permissions associated with it, defined in a configuration file (`roles.json`).
 
-2. **User Model**: The user model has been updated to include a `role` attribute, which can be one of the predefined roles.
+2. **User Model**: The user model has been updated to include a `role` attribute, which can be one of the roles mentionned above.
 
 3. **Middleware**: A middleware (`roleMiddleware.js`) has been created to check user roles and permissions. This middleware is applied to routes that require specific permissions.
 
@@ -180,7 +180,7 @@ The reasons why I chose this feature are the following:
 
 #### Example Usage
 
-- **Signup Form**: Users can select their role during signup and when creating a new one from the "People" page.
+- **Signup & User Creation Forms**: Users can select their role during signup and when creating a new one from the "People" page.
   ![New user form with role selection](screenshots/new_user_form.png)
 
 - **Protected Routes**: Only users with the appropriate permissions can access certain routes.
@@ -189,3 +189,20 @@ The reasons why I chose this feature are the following:
   - speedwagon (`admin`)
     ![Admin creating a project](screenshots/admin_creating_project.png)
     ![Project Creation successful](screenshots/admin_project_created.png)
+
+### Feedback
+
+- The project is **well-organized**; models, controllers, etc. are separated which made the navigation easier even for a first-timer like me.
+- The **API endpoints** are well-defined and follow RESTful principles, as far as I can tell. This makes it easier to understand and use the API upon first use. The several files used make it a bit confusing, but it is still manageable.
+
+#### Difficulties
+
+- The codebase was a bit **overwhelming** upon opening it for the first time, so it took some time to get familiar with it and identify where changes were needed.
+  - For example, for the 1st fixed bug, I initially just called the only element of the array instead of changing the way the call to the database was made directly.
+- I didn't really **dare to make changes** mostly on the backend with the database's schemas. I intended to implement a gamification feature first, but it required too many changes so I opted for the roles and permissions instead, which required only one more data type in the schema.
+- **Managing state** across different components, as it is a concept that I'm still not quite familiar with.
+
+#### Suggestions
+
+- Maybe add **input validation** in forms, such as for the emails and passwords, I was a bit surprised that it wasn't implemented already, maybe I should have done it 😅
+- Also a **documentation** for the codebase could make the navigation easier, even if it is quite time-consuming to make one.
